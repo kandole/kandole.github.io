@@ -1,0 +1,679 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  <link href="/blog/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css"/>
+
+
+
+
+  <link href="//fonts.googleapis.com/css?family=Lato:300,400,700,400italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+
+
+
+<link href="/blog/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/blog/css/main.css?v=0.5.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="ruby," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=0.5.0" />
+
+
+
+
+
+
+<meta name="description" content="要点（2.4）这章主要探讨Ruby元编程。引用《Ruby元编程》中对元编程的定义：
+
+元编程是编写在运行时操纵语言构建的代码。
+
+简单来说就是编写程序的程序。
+这本书只用一节来介绍Ruby元编程，篇幅所限，只能是点到为止。还好有《Ruby元编程》，之后会找时间专门介绍。
+这里给出的元编程示例是Rails的核心组件之一ActiveRecord[1]，看来Rails的ActiveRecord实在过于经">
+<meta property="og:type" content="article">
+<meta property="og:title" content="7-languages-in-7-weeks-ruby-day-3">
+<meta property="og:url" content="http://www.dongxiaoyun.com/2016/02/7-languages-in-7-weeks-ruby-day-3.html">
+<meta property="og:site_name" content="纸篓">
+<meta property="og:description" content="要点（2.4）这章主要探讨Ruby元编程。引用《Ruby元编程》中对元编程的定义：
+
+元编程是编写在运行时操纵语言构建的代码。
+
+简单来说就是编写程序的程序。
+这本书只用一节来介绍Ruby元编程，篇幅所限，只能是点到为止。还好有《Ruby元编程》，之后会找时间专门介绍。
+这里给出的元编程示例是Rails的核心组件之一ActiveRecord[1]，看来Rails的ActiveRecord实在过于经">
+<meta property="og:updated_time" content="2016-02-17T06:50:14.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="7-languages-in-7-weeks-ruby-day-3">
+<meta name="twitter:description" content="要点（2.4）这章主要探讨Ruby元编程。引用《Ruby元编程》中对元编程的定义：
+
+元编程是编写在运行时操纵语言构建的代码。
+
+简单来说就是编写程序的程序。
+这本书只用一节来介绍Ruby元编程，篇幅所限，只能是点到为止。还好有《Ruby元编程》，之后会找时间专门介绍。
+这里给出的元编程示例是Rails的核心组件之一ActiveRecord[1]，看来Rails的ActiveRecord实在过于经">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 0,
+      author: '博主'
+    }
+  };
+</script>
+
+  <title> 7-languages-in-7-weeks-ruby-day-3 | 纸篓 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/blog/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">纸篓</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">赟SAMA的个人博客</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu ">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-home fa-fw"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/blog/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-archive fa-fw"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/blog/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-tags fa-fw"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+      
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                7-languages-in-7-weeks-ruby-day-3
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-02-17T14:25:03+08:00" content="2016-02-17">
+              2016-02-17
+            </time>
+          </span>
+
+          
+
+          
+            
+          
+
+          
+
+          
+          
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="要点（2-4）"><a href="#要点（2-4）" class="headerlink" title="要点（2.4）"></a>要点（2.4）</h2><p>这章主要探讨Ruby元编程。引用《Ruby元编程》中对元编程的定义：</p>
+<blockquote>
+<p>元编程是编写在运行时操纵语言构建的代码。</p>
+</blockquote>
+<p>简单来说就是编写程序的程序。</p>
+<p>这本书只用一节来介绍Ruby元编程，篇幅所限，只能是点到为止。还好有《Ruby元编程》，之后会找时间专门介绍。</p>
+<p>这里给出的元编程示例是Rails的核心组件之一ActiveRecord<a href="http://zh.wikipedia.org/wiki/Active_Record" target="_blank" rel="external">[1]</a>，看来Rails的ActiveRecord实在过于经典，《Ruby元编程》的开篇也是拿它举例。<br><figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 元编程示例</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Department</span> &amp;<span class="title">lt</span>;</span> <span class="constant">ActiveRecord::Base</span></span><br><span class="line">    has_many <span class="symbol">:employees</span></span><br><span class="line">    has_one <span class="symbol">:manager</span></span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure></p>
+<h3 id="打开类（2-4-1）"><a href="#打开类（2-4-1）" class="headerlink" title="打开类（2.4.1）"></a>打开类（2.4.1）</h3><p>既open class。首次使用class关键字会定义这个类，如果类已经定义，再次使用class则会修改之前的类定义。可以使用这一特性扩充已有类，添加一些方法。方法名相同时，则会覆盖原有的方法。Ruby中，对可打开的类没有限制，也就是说甚至可以重定义Class.new。以我现在的经验，最好不要重定义（污染）Ruby的标准库，因为这很可能会对之后引入第三方库造成不小的麻烦。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># &#25171;&#24320;&#21407;&#29983;&#30340;String&#31867;&#65292;&#20026;&#20854;&#28155;&#21152;blank?&#26041;&#27861;&#10;class String&#10;    def blank?&#10;        self.siza == 0&#10;    end&#10;end</span><br></pre></td></tr></table></figure></p>
+<h3 id="使用method-missing（2-4-2）"><a href="#使用method-missing（2-4-2）" class="headerlink" title="使用method_missing（2.4.2）"></a>使用method_missing（2.4.2）</h3><p>method_missing是BasicObject类的方法，参见<a href="http://ruby-doc.org/core-2.2.1/BasicObject.html#method-i-method_missing" target="_blank" rel="external">这里</a>。在找不到类的方法时，可以通过重载（override）method_missing方法，停止抛出异常，定制一些行为。</p>
+<p>关于method_missing的使用参见<a href="https://ruby-china.org/topics/3434" target="_blank" rel="external">这里</a>。对于层级关系比较庞杂的情况，因为要逐层向上寻找，直到确认最上层没有该方法的时候，才会调用method_missing，因此有可能会产生性能问题。同时，使用method_missing会增加调试难度，因为Ruby不再会提示找不到某方法的错误。所以，使用method_missing一定要三思而后行。</p>
+<p>顺便说一句，Ruby的method_missing真的很像Perl的<a href="http://perldoc.perl.org/perlsub.html#Autoloading" target="_blank" rel="external">AUTOLOAD函数</a>，同样也是在找不到函数的时候调用（如果定义了AUTOLOAD的话）。</p>
+<h3 id="模块（2-4-3）"><a href="#模块（2-4-3）" class="headerlink" title="模块（2.4.3）"></a>模块（2.4.3）</h3><p>这里给出原书简化后的代码示例，并补全注释。<br><figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">module</span> <span class="title">ActsAsCsv</span></span></span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">self</span>.<span class="title">included</span><span class="params">(base)</span> <span class="comment"># 在ActsAsCsv被Mixin（include）的时候调用</span></span></span><br><span class="line">    base.extend <span class="constant">ClassMethods</span> <span class="comment"># 添加ClassMethods模块的方法，也就是acts_as_csv</span></span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line"><span class="keyword">end</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">module</span> <span class="title">ClassMethods</span></span></span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">acts_as_csv</span></span></span><br><span class="line">    <span class="keyword">include</span> <span class="constant">InstanceMethods</span> <span class="comment"># 混入InstanceMethods模块</span></span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line"><span class="keyword">end</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">module</span> <span class="title">InstanceMethods</span></span></span><br><span class="line">  <span class="comment"># 定义实例变量的访问器</span></span><br><span class="line">  <span class="keyword">attr_accessor</span> <span class="symbol">:headers</span>, <span class="symbol">:csv_contents</span></span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">read</span></span></span><br><span class="line">    <span class="comment"># 读取CSV  ...</span></span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line">  <span class="comment"># 初始化</span></span><br><span class="line">  <span class="function"><span class="keyword">def</span> <span class="title">initialize</span></span></span><br><span class="line">    read</span><br><span class="line">  <span class="keyword">end</span></span><br><span class="line"><span class="keyword">end</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">RubyCsv</span> <span class="comment"># 不需要继承，直接混入模块就行</span></span></span><br><span class="line">  <span class="keyword">include</span> <span class="constant">ActsAsCsv</span></span><br><span class="line">  acts_as_csv <span class="comment"># 生成read等实例方法</span></span><br><span class="line"><span class="keyword">end</span></span><br><span class="line"></span><br><span class="line">m = <span class="constant">RubyCsv</span>.new</span><br><span class="line">puts m.headers.inspect</span><br><span class="line">puts m.csv_contents.inspect</span><br></pre></td></tr></table></figure></p>
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/blog/tags/ruby/" rel="tag">#ruby</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/blog/2016/02/7-languages-in-7-weeks-ruby-day-2.html" rel="next" title="7-languages-in-7-weeks-ruby-day-2">
+                <i class="fa fa-chevron-left"></i> 7-languages-in-7-weeks-ruby-day-2
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/blog/2016/02/7-languages-in-7-weeks-ruby-day-4.html" rel="prev" title="7-languages-in-7-weeks-ruby-day-4">
+                7-languages-in-7-weeks-ruby-day-4 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/blog/images/avatar.jpg"
+               alt="赟SAMA" />
+          <p class="site-author-name" itemprop="name">赟SAMA</p>
+          <p class="site-description motion-element" itemprop="description"></p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/blog/archives">
+              <span class="site-state-item-count">4</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+          
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/blog/tags">
+                <span class="site-state-item-count">1</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc-indicator-top post-toc-indicator">
+            <i class="fa fa-angle-double-up"></i>
+          </div>
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#要点（2-4）"><span class="nav-number">1.</span> <span class="nav-text">要点（2.4）</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#打开类（2-4-1）"><span class="nav-number">1.1.</span> <span class="nav-text">打开类（2.4.1）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#使用method-missing（2-4-2）"><span class="nav-number">1.2.</span> <span class="nav-text">使用method_missing（2.4.2）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#模块（2-4-3）"><span class="nav-number">1.3.</span> <span class="nav-text">模块（2.4.3）</span></a></li></ol></li></ol></div>
+            
+          </div>
+          <div class="post-toc-indicator-bottom post-toc-indicator">
+            <i class="fa fa-angle-double-down"></i>
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">赟SAMA</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+
+      </div>
+    </footer>
+
+    <div class="back-to-top"></div>
+  </div>
+
+  
+
+
+  
+
+
+
+  <script type="text/javascript" src="/blog/vendors/jquery/index.js?v=2.1.3"></script>
+
+  <script type="text/javascript" src="/blog/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  <script type="text/javascript" src="/blog/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  <script type="text/javascript" src="/blog/vendors/velocity/velocity.min.js"></script>
+
+  <script type="text/javascript" src="/blog/vendors/velocity/velocity.ui.min.js"></script>
+
+  <script type="text/javascript" src="/blog/vendors/fancybox/source/jquery.fancybox.pack.js"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/blog/js/src/utils.js?v=0.5.0"></script>
+
+  <script type="text/javascript" src="/blog/js/src/motion.js?v=0.5.0"></script>
+
+
+
+  
+  
+
+  
+  
+<script type="text/javascript" src="/blog/js/src/scrollspy.js?v=0.5.0"></script>
+
+<script type="text/javascript" id="sidebar.toc.highlight">
+  $(document).ready(function () {
+    var tocSelector = '.post-toc';
+    var $tocSelector = $(tocSelector);
+    var activeCurrentSelector = '.active-current';
+
+    $tocSelector
+      .on('activate.bs.scrollspy', function () {
+        var $currentActiveElement = $(tocSelector + ' .active').last();
+
+        removeCurrentActiveClass();
+        $currentActiveElement.addClass('active-current');
+
+        $tocSelector[0].scrollTop = $currentActiveElement.position().top;
+      })
+      .on('clear.bs.scrollspy', function () {
+        removeCurrentActiveClass();
+      });
+
+    function removeCurrentActiveClass () {
+      $(tocSelector + ' ' + activeCurrentSelector)
+        .removeClass(activeCurrentSelector.substring(1));
+    }
+
+    function processTOC () {
+      getTOCMaxHeight();
+      toggleTOCOverflowIndicators();
+    }
+
+    function getTOCMaxHeight () {
+      var height = $('.sidebar').height() -
+                   $tocSelector.position().top -
+                   $('.post-toc-indicator-bottom').height();
+
+      $tocSelector.css('height', height);
+
+      return height;
+    }
+
+    function toggleTOCOverflowIndicators () {
+      tocOverflowIndicator(
+        '.post-toc-indicator-top',
+        $tocSelector.scrollTop() > 0 ? 'show' : 'hide'
+      );
+
+      tocOverflowIndicator(
+        '.post-toc-indicator-bottom',
+        $tocSelector.scrollTop() >= $tocSelector.find('ol').height() - $tocSelector.height() ? 'hide' : 'show'
+      )
+    }
+
+    $(document).on('sidebar.motion.complete', function () {
+      processTOC();
+    });
+
+    $('body').scrollspy({ target: tocSelector });
+    $(window).on('resize', function () {
+      if ( $('.sidebar').hasClass('sidebar-active') ) {
+        processTOC();
+      }
+    });
+
+    onScroll($tocSelector);
+
+    function onScroll (element) {
+      element.on('mousewheel DOMMouseScroll', function (event) {
+          var oe = event.originalEvent;
+          var delta = oe.wheelDelta || -oe.detail;
+
+          this.scrollTop += ( delta < 0 ? 1 : -1 ) * 30;
+          event.preventDefault();
+
+          toggleTOCOverflowIndicators();
+      });
+    }
+
+    function tocOverflowIndicator (indicator, action) {
+      var $indicator = $(indicator);
+      var opacity = action === 'show' ? 1 : 0;
+      $indicator.velocity ?
+        $indicator.velocity('stop').velocity({
+          opacity: opacity
+        }, { duration: 100 }) :
+        $indicator.stop().animate({
+          opacity: opacity
+        }, 100);
+    }
+
+  });
+</script>
+
+<script type="text/javascript" id="sidebar.nav">
+  $(document).ready(function () {
+    var html = $('html');
+    var TAB_ANIMATE_DURATION = 200;
+    var hasVelocity = $.isFunction(html.velocity);
+
+    $('.sidebar-nav li').on('click', function () {
+      var item = $(this);
+      var activeTabClassName = 'sidebar-nav-active';
+      var activePanelClassName = 'sidebar-panel-active';
+      if (item.hasClass(activeTabClassName)) {
+        return;
+      }
+
+      var currentTarget = $('.' + activePanelClassName);
+      var target = $('.' + item.data('target'));
+
+      hasVelocity ?
+        currentTarget.velocity('transition.slideUpOut', TAB_ANIMATE_DURATION, function () {
+          target
+            .velocity('stop')
+            .velocity('transition.slideDownIn', TAB_ANIMATE_DURATION)
+            .addClass(activePanelClassName);
+        }) :
+        currentTarget.animate({ opacity: 0 }, TAB_ANIMATE_DURATION, function () {
+          currentTarget.hide();
+          target
+            .stop()
+            .css({'opacity': 0, 'display': 'block'})
+            .animate({ opacity: 1 }, TAB_ANIMATE_DURATION, function () {
+              currentTarget.removeClass(activePanelClassName);
+              target.addClass(activePanelClassName);
+            });
+        });
+
+      item.siblings().removeClass(activeTabClassName);
+      item.addClass(activeTabClassName);
+    });
+
+    $('.post-toc a').on('click', function (e) {
+      e.preventDefault();
+      var targetSelector = NexT.utils.escapeSelector(this.getAttribute('href'));
+      var offset = $(targetSelector).offset().top;
+      hasVelocity ?
+        html.velocity('stop').velocity('scroll', {
+          offset: offset  + 'px',
+          mobileHA: false
+        }) :
+        $('html, body').stop().animate({
+          scrollTop: offset
+        }, 500);
+    });
+
+    // Expand sidebar on post detail page by default, when post has a toc.
+    NexT.motion.middleWares.sidebar = function () {
+      var $tocContent = $('.post-toc-content');
+
+      if (CONFIG.sidebar === 'post') {
+        if ($tocContent.length > 0 && $tocContent.html().trim().length > 0) {
+          NexT.utils.displaySidebar();
+        }
+      }
+    };
+  });
+</script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/blog/js/src/bootstrap.js?v=0.5.0"></script>
+
+
+
+  
+
+
+
+  
+
+
+
+  
+  
+
+  
+  
+
+
+</body>
+</html>
