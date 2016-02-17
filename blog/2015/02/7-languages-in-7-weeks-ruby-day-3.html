@@ -65,8 +65,8 @@
 这本书只用一节来介绍Ruby元编程，篇幅所限，只能是点到为止。还好有《Ruby元编程》，之后会找时间专门介绍。
 这里给出的元编程示例是Rails的核心组件之一ActiveRecord[1]，看来Rails的ActiveRecord实在过于经">
 <meta property="og:type" content="article">
-<meta property="og:title" content="7-languages-in-7-weeks-ruby-day-3">
-<meta property="og:url" content="http://www.dongxiaoyun.com/2016/02/7-languages-in-7-weeks-ruby-day-3.html">
+<meta property="og:title" content="七周七语言 Ruby Day 3">
+<meta property="og:url" content="http://www.dongxiaoyun.com/2015/02/7-languages-in-7-weeks-ruby-day-3.html">
 <meta property="og:site_name" content="纸篓">
 <meta property="og:description" content="要点（2.4）这章主要探讨Ruby元编程。引用《Ruby元编程》中对元编程的定义：
 
@@ -75,9 +75,9 @@
 简单来说就是编写程序的程序。
 这本书只用一节来介绍Ruby元编程，篇幅所限，只能是点到为止。还好有《Ruby元编程》，之后会找时间专门介绍。
 这里给出的元编程示例是Rails的核心组件之一ActiveRecord[1]，看来Rails的ActiveRecord实在过于经">
-<meta property="og:updated_time" content="2016-02-17T06:50:14.000Z">
+<meta property="og:updated_time" content="2016-02-17T10:23:58.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="7-languages-in-7-weeks-ruby-day-3">
+<meta name="twitter:title" content="七周七语言 Ruby Day 3">
 <meta name="twitter:description" content="要点（2.4）这章主要探讨Ruby元编程。引用《Ruby元编程》中对元编程的定义：
 
 元编程是编写在运行时操纵语言构建的代码。
@@ -102,7 +102,7 @@
   };
 </script>
 
-  <title> 7-languages-in-7-weeks-ruby-day-3 | 纸篓 </title>
+  <title> 七周七语言 Ruby Day 3 | 纸篓 </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -159,6 +159,16 @@
               <i class="menu-item-icon fa fa-home fa-fw"></i> <br />
             
             首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/blog/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-th fa-fw"></i> <br />
+            
+            分类
           </a>
         </li>
       
@@ -222,7 +232,7 @@
             
             
               
-                7-languages-in-7-weeks-ruby-day-3
+                七周七语言 Ruby Day 3
               
             
           </h1>
@@ -234,11 +244,30 @@
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-02-17T14:25:03+08:00" content="2016-02-17">
-              2016-02-17
+            <time itemprop="dateCreated" datetime="2015-02-03T14:25:03+08:00" content="2015-02-03">
+              2015-02-03
             </time>
           </span>
 
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/blog/categories/七周七语言/" itemprop="url" rel="index">
+                    <span itemprop="name">七周七语言</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
           
 
           
@@ -266,8 +295,8 @@
 </blockquote>
 <p>简单来说就是编写程序的程序。</p>
 <p>这本书只用一节来介绍Ruby元编程，篇幅所限，只能是点到为止。还好有《Ruby元编程》，之后会找时间专门介绍。</p>
-<p>这里给出的元编程示例是Rails的核心组件之一ActiveRecord<a href="http://zh.wikipedia.org/wiki/Active_Record" target="_blank" rel="external">[1]</a>，看来Rails的ActiveRecord实在过于经典，《Ruby元编程》的开篇也是拿它举例。<br><figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 元编程示例</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Department</span> &amp;<span class="title">lt</span>;</span> <span class="constant">ActiveRecord::Base</span></span><br><span class="line">    has_many <span class="symbol">:employees</span></span><br><span class="line">    has_one <span class="symbol">:manager</span></span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure></p>
-<h3 id="打开类（2-4-1）"><a href="#打开类（2-4-1）" class="headerlink" title="打开类（2.4.1）"></a>打开类（2.4.1）</h3><p>既open class。首次使用class关键字会定义这个类，如果类已经定义，再次使用class则会修改之前的类定义。可以使用这一特性扩充已有类，添加一些方法。方法名相同时，则会覆盖原有的方法。Ruby中，对可打开的类没有限制，也就是说甚至可以重定义Class.new。以我现在的经验，最好不要重定义（污染）Ruby的标准库，因为这很可能会对之后引入第三方库造成不小的麻烦。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># &#25171;&#24320;&#21407;&#29983;&#30340;String&#31867;&#65292;&#20026;&#20854;&#28155;&#21152;blank?&#26041;&#27861;&#10;class String&#10;    def blank?&#10;        self.siza == 0&#10;    end&#10;end</span><br></pre></td></tr></table></figure></p>
+<p>这里给出的元编程示例是Rails的核心组件之一ActiveRecord<a href="http://zh.wikipedia.org/wiki/Active_Record" target="_blank" rel="external">[1]</a>，看来Rails的ActiveRecord实在过于经典，《Ruby元编程》的开篇也是拿它举例。<br><figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 元编程示例</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Department</span> <span class="inheritance">&lt; <span class="parent">ActiveRecord::Base</span></span></span></span><br><span class="line">    has_many <span class="symbol">:employees</span></span><br><span class="line">    has_one <span class="symbol">:manager</span></span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure></p>
+<h3 id="打开类（2-4-1）"><a href="#打开类（2-4-1）" class="headerlink" title="打开类（2.4.1）"></a>打开类（2.4.1）</h3><p>既open class。首次使用class关键字会定义这个类，如果类已经定义，再次使用class则会修改之前的类定义。可以使用这一特性扩充已有类，添加一些方法。方法名相同时，则会覆盖原有的方法。Ruby中，对可打开的类没有限制，也就是说甚至可以重定义Class.new。以我现在的经验，最好不要重定义（污染）Ruby的标准库，因为这很可能会对之后引入第三方库造成不小的麻烦。<br><figure class="highlight ruby"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 打开原生的String类，为其添加blank?方法</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">String</span></span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">blank?</span></span></span><br><span class="line">        <span class="keyword">self</span>.siza == <span class="number">0</span></span><br><span class="line">    <span class="keyword">end</span></span><br><span class="line"><span class="keyword">end</span></span><br></pre></td></tr></table></figure></p>
 <h3 id="使用method-missing（2-4-2）"><a href="#使用method-missing（2-4-2）" class="headerlink" title="使用method_missing（2.4.2）"></a>使用method_missing（2.4.2）</h3><p>method_missing是BasicObject类的方法，参见<a href="http://ruby-doc.org/core-2.2.1/BasicObject.html#method-i-method_missing" target="_blank" rel="external">这里</a>。在找不到类的方法时，可以通过重载（override）method_missing方法，停止抛出异常，定制一些行为。</p>
 <p>关于method_missing的使用参见<a href="https://ruby-china.org/topics/3434" target="_blank" rel="external">这里</a>。对于层级关系比较庞杂的情况，因为要逐层向上寻找，直到确认最上层没有该方法的时候，才会调用method_missing，因此有可能会产生性能问题。同时，使用method_missing会增加调试难度，因为Ruby不再会提示找不到某方法的错误。所以，使用method_missing一定要三思而后行。</p>
 <p>顺便说一句，Ruby的method_missing真的很像Perl的<a href="http://perldoc.perl.org/perlsub.html#Autoloading" target="_blank" rel="external">AUTOLOAD函数</a>，同样也是在找不到函数的时候调用（如果定义了AUTOLOAD的话）。</p>
@@ -289,16 +318,16 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/blog/2016/02/7-languages-in-7-weeks-ruby-day-2.html" rel="next" title="7-languages-in-7-weeks-ruby-day-2">
-                <i class="fa fa-chevron-left"></i> 7-languages-in-7-weeks-ruby-day-2
+              <a href="/blog/2015/02/7-languages-in-7-weeks-ruby-day-2.html" rel="next" title="七周七语言 Ruby Day 2">
+                <i class="fa fa-chevron-left"></i> 七周七语言 Ruby Day 2
               </a>
             
           </div>
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/blog/2016/02/7-languages-in-7-weeks-ruby-day-4.html" rel="prev" title="7-languages-in-7-weeks-ruby-day-4">
-                7-languages-in-7-weeks-ruby-day-4 <i class="fa fa-chevron-right"></i>
+              <a href="/blog/2015/02/7-languages-in-7-weeks-ruby-day-4.html" rel="prev" title="七周七语言 Ruby Day 4">
+                七周七语言 Ruby Day 4 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -373,11 +402,18 @@
           </div>
           
           
+            <div class="site-state-item site-state-categories">
+              <a href="/blog/categories">
+                <span class="site-state-item-count">1</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
 
           
             <div class="site-state-item site-state-tags">
               <a href="/blog/tags">
-                <span class="site-state-item-count">1</span>
+                <span class="site-state-item-count">2</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
